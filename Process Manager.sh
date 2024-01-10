@@ -5,7 +5,7 @@ pid_list=$(ps aux | awk 'NR>1 {print $2}')
 for pid in $pid_list; do
         cpu=$(ps -p "$pid" -o %cpu | awk 'NR==2 {gsub(/%/, ""); print $1}')
         memory=$(ps -p "$pid" -o %mem | awk 'NR==2 {print $1}')
-        io=$(ps -p $pid -o nvcsw,nivcsw --no-headers | awk '{print $1 + $2}')
+        io=$(pidstat -p "$pid" | awk 'NR==4 {print $6}')
 
         if [[ $cpu =~ ^[0-9]*[.]?[0-9]+$ ]]; then
                 if [[ $memory =~ ^[0-9]*[.]?[0-9]+$ ]]; then
